@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+
+<head>
+  <title>Shared Board</title>
+</head>
+
+<body>
+  <div id="cursor">
+    <img src="img/cursor.png" alt="cursor" width="50px" height="50px">
+  </div>
+  <div style="display:flex;">
+    <button id="Generate HTML" onmousedown="generateHTMLFullReport()">Generate Full Report</button>
+    <button id="Generate HTML" onmousedown="generateStructuredHTMLReport()">Generate Structured Report</button>
+    <button id="Edit" onmousedown="editReport()" style="max-width: 50px;">Edit</button>
+    <div style="display: inline-block; margin-left: 20px;"><b id="user1State" style="color:red;">User 1: Not
+        Connected</b><br /><b id="user2State" style="color:red;">User 2: Not Connected</b></div>
+        
+  </div>
+  <div id="content_body">
+  
+  </div>
+
+  <button id="addNewDataContainer" class="addbutton">+ Section</button>
+  <div id="messages"></div>
+  <div class="ctViewers" id="ctViewersContainer">
+  </div>
+  <div id="recyclebinarea" style="display:none">
+    <img id="recyclebinimg" class="box" src="img/delete.png" alt="recycle-bin" width="50px" height="50px">
+  </div>
+  <div id="qrcode" class="qrcodeContainer" style="display: none; position: fixed; top:0; left:0; ">
+    <img src="img/qrcode.png" alt="qrcode"
+      style="outline-width: 40px;outline-color: white;outline-style: solid;">
+  </div>
+  <canvas id="myCanvas"></canvas>
+
+  <!-- JavaScript -->
+  <script src="js/main.js"></script>
+  <script src="js/ctviewer.js"></script>
+  <script src="js/generatehtml.js"></script>
+  <script>
+    connectToTwoServers();
+    //connectToWebSocketServer();
+    makeAllContainersSortable();
+    initializeMouseEvents();
+  </script>
+</body>
+
+</html>

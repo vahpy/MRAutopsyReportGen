@@ -1,0 +1,300 @@
+body {
+    background-color: #ddd;
+    margin: 10px;
+    overflow-x: hidden;
+}
+
+.error {
+    color: red;
+}
+
+.established {
+    color: green;
+}
+
+#content_body {
+    padding: 20px;
+}
+
+#cursor {
+    position: absolute;
+    z-index: 1001;
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.dataContainer {
+    display: flex;
+    background-color: #d7d7d7;
+    border: 3px solid rgba(96, 96, 95, 0.883);
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    min-height: 100px;
+}
+
+.dataContainer:hover {
+    background-color: #333;
+}
+
+.subContainer {
+    width: 100%;
+    min-height: 150px;
+}
+
+.subContainer img {
+    object-fit: cover;
+    object-position: center;
+    /* max-width: 100%;
+    max-height: 100%; */
+    margin-left: 20px;
+}
+
+.subContainer span {
+    display: inline-block;
+    min-height: 110px;
+    min-width: 100px;
+    max-width: 500px;
+    max-height: 110px;
+    overflow: scroll;
+    border: 3px solid rgba(155, 102, 2, 0.883);
+    font-size: 20px;
+    font-weight: bold;
+    vertical-align: top;
+    margin-left: 20px;
+}
+
+.highlight {
+    background-color: #008cff !important;
+}
+
+.selectbutton {
+    position: relative;
+    right: 10px;
+    background-color: #7c81ff;
+    border-radius: 10px;
+    border: none;
+    color: white;
+
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    margin-left: 40px;
+    cursor: pointer;
+    vertical-align: middle;
+    height: 100px;
+}
+
+.addbutton {
+    background-color: #4CAF50;
+    /* Green */
+    border-radius: 10px;
+    border: none;
+    color: white;
+    padding: 30px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    margin-left: 40px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.ctviewertogglebtn {
+    min-width: 406px;
+}
+
+#recyclebinarea {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    width: 150px;
+    height: 150px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#recyclebinarea>img {
+    background-color: rgb(244 67 54);
+    border-radius: 5%;
+    width: 50px;
+    height: 50px;
+}
+
+@keyframes wave {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 165, 0, .7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 20px rgba(255, 165, 0, .2);
+        transform: scale(1.1);
+        opacity: .8;
+
+    }
+
+    to {
+        box-shadow: none;
+        transform: scale(1);
+        opacity: .5;
+    }
+}
+
+.box {
+    width: 100px;
+    height: 100px;
+    background-color: #ff9900;
+    position: fixed;
+    animation-name: wave;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+#addNewDataContainer {
+    display: block;
+    margin: auto;
+    margin-top: 40px;
+    width: 300px;
+    height: 100px;
+}
+
+[draggable]:active {
+    /* Add a drop shadow to the dragged element */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+    /* Add a border to the dragged element */
+    border: 2px dashed #333;
+
+    /* Add some padding to the dragged element */
+    padding: 16px;
+
+    /* Add a background color to the dragged element */
+    background-color: #eee;
+}
+
+.dataContainer img,
+span {
+    /* Add a drop shadow to the image */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+    /* Add a border to the image */
+    border: 2px solid #333;
+
+    /* Add some padding to the image */
+    padding: 16px;
+
+    /* Add a solid background color to the image */
+    background-color: #eee;
+
+    /* Round the corners of the box */
+    border-radius: 8px;
+}
+
+.dataContainer img:hover,
+span:hover {
+    /* Change the border color on hover */
+    border-color: #666;
+
+    /* Change the background color on hover */
+    background-color: #ddd;
+}
+
+/* Style the container for the arrows */
+.sort-arrows {
+    /* display: flex; */
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+}
+
+/* Style the up arrow */
+.sort-arrows .up-arrow {
+    font-size: 18px;
+    color: #333;
+    margin-right: 8px;
+}
+
+/* Style the down arrow */
+.sort-arrows .down-arrow {
+    font-size: 18px;
+    color: #333;
+    margin-left: 8px;
+}
+
+/* Style the up arrow when it is active */
+.sort-arrows .up-arrow.active {
+    color: #0074d9;
+}
+
+/* Style the down arrow when it is active */
+.sort-arrows .down-arrow.active {
+    color: #0074d9;
+}
+
+.ctViewers {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+    left: auto;
+}
+
+.ctviewer {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 500px;
+    height: 70px;
+    /* overflow: hidden; */
+    transition: height 0.2s ease;
+    position: absolute;
+    bottom: 0;
+    /* left: auto; */
+    margin-right: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    /*border: dashed 1px #000;*/
+    border-bottom: 0px;
+    box-shadow: #999999 0px 0px 5px 0px;
+    background-color: aliceblue;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.ctviewer img {
+    width: 500px;
+    height: 500px;
+    object-fit: contain;
+    object-position: center;
+}
+
+button {
+    margin-left: 20px;
+    /* min-height: 70px; */
+    min-width: 170px;
+}
+
+#myCanvas {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.user0 {
+    background-color: #c7deff !important;
+}
+
+.user1 {
+    background-color: #aafeab !important;
+}
+
