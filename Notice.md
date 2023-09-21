@@ -21,7 +21,18 @@ Copyright 2020 NumFOCUS
 This library is automatically downloaded when requested by user.
 See full license in subfolder: Assets/3rdparty/SimpleITK-[VERSION]/LICENSE OR Assets/VolumeRendering/3rdparty/SimpleITK-[VERSION]/LICENSE
 
-4- MRTK
+4- Avatar Model
+Used royalty-free model from Mixamo.com
+
+5- extOSC
+MIT License
+Copyright (c) 2018-2020 Vladimir Sigalkin
+See full license in subfolder: unityproject\Assets\extOSC\LICENSE
+
+6- Photon Network
+License and third-party licenses are available https://doc.photonengine.com/fusion/current/reference/open-source-software
+
+7- MRTK
 Copyright (c) Microsoft Corporation.
 
 MIT License
@@ -40,7 +51,7 @@ Source Code Compliance Team Microsoft Corporation One Microsoft Way Redmond, WA 
 
 Notwithstanding any other terms, you may reverse engineer this software to the extent required to debug changes to any libraries licensed under the GNU Lesser General Public License.
 
-5- Libraries used in MRTK
+6- Libraries used in MRTK
 
 Oculus Controller Images Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
 
