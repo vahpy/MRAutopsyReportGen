@@ -1,0 +1,181 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSInitialize
+#pragma kernel CSHardBrush
+#pragma kernel CSGrowingBrush
+#pragma kernel CSWindowedBrush
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+/*
+Mask voxels values interpretation:
+
+[0, 1] normal density
+[-2, -1] hover on removed voxel
+[-4, -3] hover on normal voxel
+-10 removed voxel
+
+*/
+
+
+RWTexture3D<float> Result;
+Texture3D<float> DataTex;
+float3 center;
+float3 minPoint;
+float radius;
+float diagonal;
+bool erase_draw;
+bool onlySelect;
+float minVisible;
+float maxVisible;
+Texture3D<float> voxels;
+
+[numthreads(8, 8, 1)]
+void CSInitialize(uint3 id : SV_DispatchThreadID) {
+	Result[id.xyz] = DataTex[id.xyz];
+}
+
+[numthreads(8, 8, 1)]
+void CSHardBrush(uint3 id : SV_DispatchThreadID)
+{
+	float density = DataTex[id.xyz];
+	float mask = Result[id.xyz];
+	if (distance(id.xyz, center.xyz) < radius) {
+		// lines behind are the same with other brushes
+		if (onlySelect) {
+			//Preview
+			if (erase_draw) {
+				if (mask > -2.1f && mask < -0.99) {
+					Result[id.xyz] = -10.0f;
+				}
+				else if (mask > -5.0f) {
+					Result[id.xyz] = -4.0f + density;
+				}
+			}
+			else {
+				if (mask < -5.0f) {
+					Result[id.xyz] = -2.0f + density;
+				}
+			}
+			return;
+		}
+		else {
+			//Action
+			if (erase_draw) {
+				Result[id.xyz] = -10.0f;
+			}
+			else {
+				Result[id.xyz] = density;
+			}
+			return;
+		}
+	}
+
+	if (mask > -2.1f && mask < -0.99) {
+		Result[id.xyz] = -10.0f;
+	}
+	else if (mask > -5.0f) {
+		Result[id.xyz] = density;
+	}
+}
+
+
+[numthreads(8, 8, 1)]
+void CSGrowingBrush(uint3 id : SV_DispatchThreadID)
+{
+	float density = DataTex[id.xyz];
+	float mask = Result[id.xyz];
+	float3 texLoc = id.xyz - minPoint;
+	if (texLoc.x < 0 || texLoc.y < 0 || texLoc.z < 0 ||
+		texLoc.x > diagonal || texLoc.y > diagonal || texLoc.z > diagonal) {
+		// nothing
+	}
+	else {
+		if (voxels[texLoc.xyz] > 0.9f) {
+			// lines behind are the same with other brushes
+			if (onlySelect) {
+				//Preview
+				if (erase_draw) {
+					if (mask > -2.1f && mask < -0.99) {
+						Result[id.xyz] = -10.0f;
+					}
+					else if (mask > -5.0f) {
+						Result[id.xyz] = -4.0f + density;
+					}
+				}
+				else {
+					if (mask < -5.0f) {
+						Result[id.xyz] = -2.0f + density;
+					}
+				}
+				return;
+			}
+			else {
+				//Action
+				if (erase_draw) {
+					Result[id.xyz] = -10.0f;
+				}
+				else {
+					Result[id.xyz] = density;
+				}
+				return;
+			}
+		}
+	}
+	if (mask > -2.1f && mask < -0.99) {
+		Result[id.xyz] = -10.0f;
+	}
+	else if (mask > -5.0f) {
+		Result[id.xyz] = density;
+	}
+}
+
+[numthreads(8, 8, 1)]
+void CSWindowedBrush(uint3 id : SV_DispatchThreadID)
+{
+	float density = DataTex[id.xyz];
+	float mask = Result[id.xyz];
+
+	if (distance(id.xyz, center.xyz) < radius) {
+		if (minVisible <= density && density <= maxVisible) {
+			// lines behind are the same with other brushes
+			if (onlySelect) {
+				//Preview
+				if (erase_draw) {
+					if (mask > -2.1f && mask < -0.99) {
+						Result[id.xyz] = -10.0f;
+					}
+					else if (mask > -5.0f) {
+						Result[id.xyz] = -4.0f + density;
+					}
+				}
+				else {
+					if (mask < -5.0f) {
+						Result[id.xyz] = -2.0f + density;
+					}
+				}
+				return;
+			}
+			else {
+				//Action
+				if (erase_draw) {
+					Result[id.xyz] = -10.0f;
+				}
+				else {
+					Result[id.xyz] = density;
+				}
+				return;
+			}
+		}
+	}
+
+	if (mask > -2.1f && mask < -0.99) {
+		Result[id.xyz] = -10.0f;
+	}
+	else if (mask > -5.0f) {
+		Result[id.xyz] = density;
+	}
+}
+
+
+

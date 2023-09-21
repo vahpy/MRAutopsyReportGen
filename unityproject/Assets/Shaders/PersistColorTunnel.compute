@@ -1,0 +1,94 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSInitialize
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture3D<float> MaskTex;
+//RWTexture3D<float> MaskDistTex;
+//RWTexture3D<half4> MaskGradTex;
+Texture3D<float> DataTex;
+//Texture3D<half4> GradientTex;
+float3 center;
+float radius;
+float minVisible;
+float maxVisible;
+
+
+[numthreads(8, 8, 1)]
+void CSInitialize(uint3 id : SV_DispatchThreadID) {
+	MaskTex[id.xyz] = DataTex[id.xyz];
+}
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+	float3 dir = id.xyz - center.xyz;
+	float dist = length(dir);
+
+	if (dist <= radius) {
+		float density = DataTex[id.xyz];
+		MaskTex[id.xyz] = -1.0f * density - 1.0f;
+		return;
+	}
+}
+
+
+
+//Works for 1D TF, for 2D TF is slow due to large gradient texture
+//[numthreads(8, 8, 1)]
+//void CSInitialize(uint3 id : SV_DispatchThreadID) {
+//	MaskTex[id.xyz] = DataTex[id.xyz];
+//	MaskGradTex[id.xyz] = GradientTex[id.xyz];
+//	MaskDistTex[id.xyz] = 0.0f;
+//}
+//
+//
+//[numthreads(8, 8, 1)]
+//void CSMain(uint3 id : SV_DispatchThreadID)
+//{
+//	float3 dir = id.xyz - center.xyz;
+//	float dist = length(dir);
+//
+//	if (dist > 2 * radius) return;
+//
+//	if (dist <= radius) {
+//		float density = DataTex[id.xyz];
+//		if (density >= minVisible && density <= maxVisible) {
+//			MaskTex[id.xyz] = -1.0f * density - 1.0f;
+//		}
+//		else {
+//			MaskTex[id.xyz] = -1.0f;
+//			MaskGradTex[id.xyz] = half4(0, 0, 0, 0);
+//		}
+//		return;
+//	}
+//	// radius < dist <= 2radius
+//	if (MaskTex[id.xyz] < -0.9f) return;
+//
+//	dir = normalize(dir);
+//
+//	dist = dist - radius;
+//	dist = 4 * dist / radius;
+//	dist = sqrt(dist);
+//	dist = dist * radius;
+//
+//	float3 projPoint = dist * dir + center;
+//
+//	float movement = length(projPoint.xyz - id.xyz);
+//	if (movement <= MaskDistTex[id.xyz]) {
+//		return;
+//	}
+//	MaskDistTex[id.xyz] = movement;
+//
+//
+//	//
+//	float density = DataTex[projPoint.xyz];
+//	if (dist <= radius && density >= minVisible && density <= maxVisible) {
+//		return;
+//	}
+//	if (MaskTex[id.xyz] >= -0.5f) {
+//		MaskTex[id.xyz] = density;
+//		MaskGradTex[id.xyz] = GradientTex[projPoint.xyz];
+//	}
+//}
