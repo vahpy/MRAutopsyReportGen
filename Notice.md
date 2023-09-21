@@ -1,6 +1,10 @@
 This project uses the following libraries:
+1- HoloAutopsy
+released under GNU LESSER GENERAL PUBLIC LICENSE
+Copyright (c) 2022 Vahid Pooryousef
+See full license: https://github.com/vahpy/HoloAutopsy/blob/main/LICENSE
 
-1- UnityVolumeRendering
+2- UnityVolumeRendering
 released under MIT License
 
 Copyright (c) 2019 Matias Lavik
@@ -8,31 +12,31 @@ https://github.com/mlavik1/UnityVolumeRendering
 See full license in subfolder: Assets/VolumeRendering/LICENSE
 
 
-2- openDICOM.net
+3- openDICOM.net
 LGPL Version 2.1.
 Copyright (C) 2006-2007  Albert Gnandt
 See full LGPL license in subfolder: Assets/VolumeRendering/3rdparty/openDicom
 (Notice: Parts of the code have been modified, due to the compatibility with my code, for original code download it from the source openDICOM.net)
 
-3- SimpleITK
+4- SimpleITK
 Apache License 2.0
 Copyright 2010-2019 Insight Software Consortium
 Copyright 2020 NumFOCUS
 This library is automatically downloaded when requested by user.
 See full license in subfolder: Assets/3rdparty/SimpleITK-[VERSION]/LICENSE OR Assets/VolumeRendering/3rdparty/SimpleITK-[VERSION]/LICENSE
 
-4- Avatar Model
+5- Avatar Model
 Used royalty-free model from Mixamo.com
 
-5- extOSC
+6- extOSC
 MIT License
 Copyright (c) 2018-2020 Vladimir Sigalkin
 See full license in subfolder: unityproject\Assets\extOSC\LICENSE
 
-6- Photon Network
+7- Photon Network
 License and third-party licenses are available https://doc.photonengine.com/fusion/current/reference/open-source-software
 
-7- MRTK
+8- MRTK
 Copyright (c) Microsoft Corporation.
 
 MIT License
@@ -51,7 +55,7 @@ Source Code Compliance Team Microsoft Corporation One Microsoft Way Redmond, WA 
 
 Notwithstanding any other terms, you may reverse engineer this software to the extent required to debug changes to any libraries licensed under the GNU Lesser General Public License.
 
-6- Libraries used in MRTK
+9- Libraries used in MRTK
 
 Oculus Controller Images Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
 
