@@ -45,13 +45,13 @@ var isEditing = false;
 
 // Func
 function editReport() {
-  if(isEditing){
+  if (isEditing) {
     isEditing = false;
     $(".subContainer").addClass("ui-sortable");
     $(".voice_transcript").addClass("ui-sortable-handle");
     $(".voice_transcript").attr("contenteditable", "false");
     $(".voice_transcript").attr("draggable", "true");
-  }else{
+  } else {
     isEditing = true;
     $(".subContainer").removeClass("ui-sortable");
     $(".voice_transcript").removeClass("ui-sortable-handle");
@@ -491,7 +491,7 @@ function emulateEvent(eventType, x = -1, y = -1) {
 function connectToTwoServers() {
   if (ws1 == null || (ws1.readyState !== WebSocket.OPEN && ws1.readyState !== WebSocket.CONNECTING)) {
     if (ws1 != null) ws1.close();
-    ws1 = new WebSocket("ws://192.168.0.100:8080/Echo");
+    ws1 = new WebSocket("ws://127.0.0.1:8080/Echo");
     connectToWebSocketServer(ws1);
   }
   if (ws2 == null || (ws2.readyState !== WebSocket.OPEN && ws2.readyState !== WebSocket.CONNECTING)) {
@@ -503,10 +503,8 @@ function connectToTwoServers() {
     connectToTwoServers();
   }, connectionWait);
 }
+
 function connectToWebSocketServer(ws) {
-  // Create a new WebSocket instance
-  //ws = new WebSocket("ws://127.0.0.1:8080/Echo");
-  // Set the event handlers for the WebSocket events
   ws.onopen = function (event) {
     console.log("WebSocket connection established");
     if (ws === ws1) {
@@ -518,29 +516,21 @@ function connectToWebSocketServer(ws) {
       state2.innerHTML = "User 2: Connected";
       state2.style.color = "green";
     }
-
-    // var div = document.createElement("div");
-    // div.className = "established";
-    // div.innerHTML = "WebSocket connection established";
-
-    // Append the new div element to the messages div
-    //document.getElementById("messages").appendChild(div);
   };
   ws.onmessage = function (event) {
     let msg = event.data;
 
     // is type of msg a blob?
     if (msg instanceof Blob) {
-      //console.log("it's a blob");
       isPNG(msg).then((result) => {
-        if (result) {
+        if (result[0]) {
           // if it's png, it's a CT slice
           //console.log("it's a png, user: " + last_user );
-          showRealTimeCTSlice(last_user, msg);
+          showRealTimeCTSlice(result[1], result[2]);
         } else {
           // if it's not png, it's jpeg
           //console.log("it's a jpeg, user: " + last_user);
-          addImage(last_user, msg, "camera");
+          addImage(result[1], result[2], "camera");
         }
       });
       return;
@@ -676,19 +666,24 @@ function hideQRCode() {
 }
 //Helper Functions
 
-// function extractFunction(str) {
-//   // Use a regular expression to match the word between two % symbols
-//   var match = str.match(/%(.*?)%/);
-//   if (match && match.index == 0) {
-//     // Return the word if it was found
-//     return match[1];
-//   } else if (match && match.index == 1) {
-//     return match[2];
-//   } else {
-//     // Return null if no match was found
-//     return null;
-//   }
-// }
+function extractUserFromBolbData(data) {
+  let index = -1;
+  let endOfSeq = Math.min(data.byteLength - 4, 100); //check maximum 100 first bytes
+  var arr = new Uint8Array(data);
+  for (let i = 0; i <= endOfSeq; i++) {
+    // console.log(arr[i] + "," + arr[i + 1]);
+    if (arr[i] === 13 && arr[i + 1] === 10 && arr[i + 2] === 13 && arr[i + 3] === 10) {
+      index = i;
+      break;
+    }
+  }
+  if (index !== -1) {
+    return String.fromCharCode.apply(String, arr.slice(0,index));
+  } else {
+    return null;
+  }
+}
+
 
 function extractUserFunc(str) {
   let result = {};
@@ -781,20 +776,29 @@ function base64ToBlob(base64String) {
 // }
 
 const isPNG = (blob) => {
-  // Create a new FileReader
   const reader = new FileReader();
   reader.readAsArrayBuffer(blob);
-  // Create a promise that resolves when the file has been read
+
   return new Promise((resolve) => {
     reader.onloadend = () => {
+      //check if username is embedded in the first bytes
+      let extractedUser = extractUserFromBolbData(reader.result);
+      let offset = 0;
+      
+      if(extractedUser){
+        offset = extractedUser.length + 4;
+        last_user = extractedUser;
+      }
+      
       // Get the first eight bytes of the file
-      const uint = new Uint8Array(reader.result.slice(0, 8));
+      const uint = new Uint8Array(reader.result.slice(offset, offset+8));
+      
       // Check if the file starts with the PNG header
       const signature = String.fromCharCode(...uint);
       if (signature === '\x89PNG\r\n\x1a\n') {
-        resolve(true);
+        resolve([true, extractedUser, reader.result.slice(offset)]);
       } else {
-        resolve(false);
+        resolve([false, extractedUser, reader.result.slice(offset)]);
       }
     };
   });
@@ -818,20 +822,3 @@ const isJPG = (blob) => {
     };
   });
 };
-
-// Right Click Menu
-// document.oncontextmenu = function (e) {
-//   e.preventDefault();
-//   var menu = document.createElement("div");
-//   menu.style.position = "fixed";
-//   menu.style.left = e.clientX + "px";
-//   menu.style.top = e.clientY + "px";
-//   menu.style.backgroundColor = "white";
-//   menu.style.padding = "10px";
-//   menu.innerHTML = "<a href='#'>Item 1</a><br><a href='#'>Item 2</a>";
-//   document.body.appendChild(menu);
-//   document.body.addEventListener("mousedown", function () {
-//     document.body.removeChild(menu);
-//   });
-//   return false;
-// };

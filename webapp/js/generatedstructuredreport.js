@@ -73,7 +73,7 @@ function getValuesByKey(arr, key) {
 }
 
 function tagAnswer(answer) {
-    if (answer == undefined || answer == null || answer == "") return "<span id=\"sumtext" + (sumtextUID++) + "\" class=\"summarisedtext\" >&nbsp;&nbsp;</span>";
+    if (answer == undefined || answer == null || answer == "") return "<span id=\"sumtext" + (sumtextUID++) + "\" class=\"summarisedtext\" ></span>";
 
     let taggedAnswer = "";
     //find [number] in answer
@@ -116,7 +116,7 @@ function GenerateSummaries(gptAnswer) {
             if (answer == undefined && answer == null) {
                 answer = "";
             }
-            templateHTML += "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + template[key][i] + ": " + tagAnswer(answer) + "</p>";
+            templateHTML += "<p><span style=\"font-weight: lighter;\">" + template[key][i] + "</span>: " + tagAnswer(answer) + "</p>";
         }
     }
     $("#template").html(templateHTML);
@@ -447,6 +447,7 @@ function printReport() {
     let remainingTexts =[];
     $(".summarisedtext").each(function () {
         if (!$(this).hasClass("validated")) {
+            !$(this).addClass("unvalidated");
             allValidated = false;
             // organ name
             let organName = $(this).parent().text().split(":")[0];
@@ -458,7 +459,7 @@ function printReport() {
         if (!$(this).hasClass("validated")) {
             allValidated = false;
             let keyWord = $(this).parent().text().split(":")[0];
-            remainingTexts.push(keyWord);
+            remainingTexts.push("Comments Section: " + keyWord);
             //return false;
         }
     });
@@ -472,18 +473,17 @@ function printReport() {
             title: '',
             type: 'warning',
             icon: 'warning',
-            html: 'Please validate ALL generated texts by AI before printing.<p>Remaining parts:<br/> ' + remainingTextsString+'</p>',
+            html: 'Please validate ALL AI-generated texts before exporting to PDF.<p>Remaining parts:<br/> ' + remainingTextsString+'</p>',
             confirmButtonText: 'OK'
         });
         return;
     }
 
-
-    //var printContents = document.body.innerHTML;
     var originalContents = document.body.innerHTML;
 
     // modify the print contents
     $("#summary").prepend("<div style=\"direction:ltr;\"><h1><center>Autopsy Report</center></h1><h4>Printed at: " + new Date().toLocaleString() + "</h4><h4>Identity: Someone</h4><h4>Examiner: Pathologist 1</h4></div>");
+    $("#summary").css('direction','ltr');
     $("button").remove();
     $(".disabled").remove();
     $("#referencesarea").remove();
@@ -507,6 +507,7 @@ function printReport() {
     $("#summary").append(reportBody);
     $('#template').css('display', 'table-cell');
     $('#template').css('width', '80%');
+    $('.comment').removeAttr('style');
     $('#commentsection').css('display', 'table-cell');
     $('#commentsection').css('width', '20%');
     $('#commentsection').css('font-size', '9pt');
@@ -515,7 +516,14 @@ function printReport() {
     $('.comment').css('border', '1px solid lightgrey');
     $('.comment-text').css('color', 'grey');
     $('.comment-text').css('overflow', 'wrap');
+    $('.comment-text').removeClass('validated');
+    $('.summarisedtext').removeClass('validated');
     $('.comment-delete').remove();
+    $('#commentsection').each(function() {
+        var children = $(this).children().get();
+        children.reverse();
+        $(this).append(children);
+    });
     //blur window
     cleanCanvas();
     window.print();
@@ -695,7 +703,10 @@ function applyCustomisedMenu() {
             default:
                 if (lastRightClickReceiver.is('.summarisedtext') || lastRightClickReceiver.is('.comment-text')) {
                     if (lastRightClickReceiver.hasClass("validated")) lastRightClickReceiver.removeClass('validated');
-                    else lastRightClickReceiver.addClass('validated');
+                    else {
+                        lastRightClickReceiver.removeClass('unvalidated');
+                        lastRightClickReceiver.addClass('validated');
+                    }
                 }
         }
 
