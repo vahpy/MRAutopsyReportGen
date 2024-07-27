@@ -1,6 +1,6 @@
 This project uses the following libraries:
 1- HoloAutopsy
-released under GNU LESSER GENERAL PUBLIC LICENSE
+released under MIT LICENSE
 Copyright (c) 2022 Vahid Pooryousef
 See full license: https://github.com/vahpy/HoloAutopsy/blob/main/LICENSE
 
