@@ -82,8 +82,15 @@ public class EchoServerBehavior : MonoBehaviour
         //{
         //    Debug.Log("onSendMessage is null");
         //}
-        SendNewMessage("setUser", username);
-        onSendImage?.Invoke(imageData);
+        //SendNewMessage("setUser", username);
+        var userNameByteData = System.Text.Encoding.ASCII.GetBytes(username +"\r\n\r\n");
+
+        // concat the username and image data
+        byte[] data = new byte[userNameByteData.Length + imageData.Length];
+        Buffer.BlockCopy(userNameByteData, 0, data, 0, userNameByteData.Length);
+        Buffer.BlockCopy(imageData, 0, data, userNameByteData.Length, imageData.Length);
+
+        onSendImage?.Invoke(data);
     }
 
     public void SendNewMessage(string func, string data)
