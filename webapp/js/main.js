@@ -143,7 +143,8 @@ function addWordsToCurrentSection(user, words) {
 
   let subContainer = section.getElementsByClassName("subContainer")[0];
   if (!subContainer) return;
-  let textFields = subContainer.querySelectorAll("[owner=sp-" + user + "]");
+  let validUserName = user.replace(/\s/g, '\\ ');
+  let textFields = subContainer.querySelectorAll("[owner=sp-" + validUserName + "]");
   if (!textFields) {
     let span = document.createElement("span");
     span.className = "voice_transcript";
