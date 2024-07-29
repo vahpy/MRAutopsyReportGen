@@ -110,6 +110,11 @@ namespace HoloAutopsy.Record.Audio
             }
             return 0;
         }
+        
+        public string GetSelectedMicrophoneName()
+        {
+            return deviceName;
+        }
         #endregion
 
         #region UNITY_METHODS
