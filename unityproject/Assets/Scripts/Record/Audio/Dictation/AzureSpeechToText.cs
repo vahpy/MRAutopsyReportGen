@@ -199,6 +199,7 @@ namespace HoloAutopsy.Record.Audio
         private async void StartSpeechRecognition()
         {
             print("Speech Recognition Starting");
+            selectedMic = GameObject.Find("AudioRecManager").GetComponent<VoiceRecorder>().GetSelectedMicrophoneName();
             if (selectedMic == null || selectedMic.Trim().Length == 0)
             {
                 selectedMic = Microphone.devices[0];
@@ -213,7 +214,6 @@ namespace HoloAutopsy.Record.Audio
                     audioSource.loop = true;
                     Debug.Log("Started New Microphone");
                 //}
-                Debug.Log("Microphone.Start: " + selectedMic + ", audioSource.clip channels: " + audioSource.clip.channels + ", frequency:" + audioSource.clip.frequency);
                 Debug.Log("Microphone.Start: " + selectedMic + ", audioSource.clip channels: " + audioSource.clip.channels + ", frequency:" + audioSource.clip.frequency);
             }
 
